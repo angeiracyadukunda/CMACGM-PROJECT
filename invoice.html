@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Invoice</title>
+  <style>
+    /* Add your CSS styles for the invoice layout here */
+  </style>
+</head>
+<body>
+  <div id="invoice">
+    <!-- Your HTML structure for the invoice goes here -->
+    <h1>Invoice</h1>
+    <div class="item">
+      <input type="text" placeholder="Description" class="description">
+      <input type="number" placeholder="Quantity" class="quantity">
+      <input type="number" placeholder="Unit Price" class="price">
+      <input type="text" placeholder="Total" class="total" readonly>
+    </div>
+    <button onclick="addItem()">Add Item</button>
+    <p id="invoice-total">Total: $0.00</p>
+  </div>
+
+  <script>
+    function addItem() {
+      const invoice = document.getElementById("invoice");
+      const item = document.createElement("div");
+      item.className = "item";
+      item.innerHTML = `
+        <input type="text" placeholder="Description" class="description">
+        <input type="number" placeholder="Quantity" class="quantity">
+        <input type="number" placeholder="Unit Price" class="price">
+        <input type="text" placeholder="Total" class="total" readonly>
+      `;
+      invoice.insertBefore(item, document.querySelector("button"));
+
+      // Attach event listeners to calculate the total for the new item
+      const quantityInput = item.querySelector(".quantity");
+      const priceInput = item.querySelector(".price");
+      const totalInput = item.querySelector(".total");
+
+      quantityInput.addEventListener("input", calculateTotal);
+      priceInput.addEventListener("input", calculateTotal);
+    }
+
+    function calculateTotal() {
+      const items = document.querySelectorAll(".item");
+      let total = 0;
+      items.forEach((item) => {
+        const quantity = parseFloat(item.querySelector(".quantity").value) || 0;
+        const price = parseFloat(item.querySelector(".price").value) || 0;
+        const itemTotal = quantity * price;
+        item.querySelector(".total").value = `$${itemTotal.toFixed(2)}`;
+        total += itemTotal;
+      });
+
+      document.getElementById("invoice-total").textContent = `Total: $${total.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>
